@@ -1,8 +1,10 @@
 package com.zetcode.sprite;
 
 import com.zetcode.config.GameConfig;
+
 import javax.swing.ImageIcon;
 import java.awt.Image;
+import java.util.Random;
 
 public class Alien extends Sprite {
 
@@ -22,16 +24,20 @@ public class Alien extends Sprite {
         setX(getX() + direction);
     }
 
-    public Bomb getBomb() {
-        return bomb;
-    }
-
     public boolean isDying() {
         return dying;
     }
 
     public void setDying(boolean dying) {
         this.dying = dying;
+    }
+
+    public Bomb getBomb() {
+        return bomb;
+    }
+
+    public boolean hasReachedGround() {
+        return getY() > GameConfig.Board.GROUND - GameConfig.Alien.HEIGHT;
     }
 
     public boolean handleShotCollision(Shot shot) {
@@ -52,6 +58,28 @@ public class Alien extends Sprite {
         }
 
         return hit;
+    }
+
+    public void maybeDropBomb() {
+        if (!isVisible() || !bomb.isDestroyed()) return;
+
+        int chance = new Random().nextInt(15);
+        if (chance == GameConfig.Alien.CHANCE) {
+            bomb.setDestroyed(false);
+            bomb.setX(getX());
+            bomb.setY(getY());
+        }
+    }
+
+    public void updateBomb(Player player) {
+        if (bomb.isDestroyed()) return;
+
+        if (bomb.handlePlayerHit(player)) return;
+
+        bomb.setY(bomb.getY() + 1);
+        if (bomb.getY() >= GameConfig.Board.GROUND - GameConfig.Bomb.HEIGHT) {
+            bomb.setDestroyed(true);
+        }
     }
 
     public class Bomb {
