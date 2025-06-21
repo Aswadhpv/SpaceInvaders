@@ -6,7 +6,6 @@ import com.zetcode.sprite.Shot;
 import com.zetcode.Commons;
 
 import javax.swing.ImageIcon;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -17,76 +16,113 @@ public class GameEngine {
     private String message = "Game Over";
 
     public void update(Player player, Shot shot, List<Alien> aliens) {
+        checkWinCondition();
+        updatePlayer(player);
+        updateShot(shot, aliens);
+        updateAliens(aliens);
+        updateBombs(player, aliens);
+    }
+
+    private void checkWinCondition() {
         if (deaths == Commons.NUMBER_OF_ALIENS_TO_DESTROY) {
             inGame = false;
             message = "Game won!";
         }
+    }
 
+    private void updatePlayer(Player player) {
         player.act();
+    }
 
-        if (shot.isVisible()) {
-            int shotX = shot.getX();
-            int shotY = shot.getY();
+    private void updateShot(Shot shot, List<Alien> aliens) {
+        if (!shot.isVisible()) return;
 
-            for (Alien alien : aliens) {
-                int alienX = alien.getX();
-                int alienY = alien.getY();
+        int shotX = shot.getX();
+        int shotY = shot.getY();
 
-                if (alien.isVisible() && shot.isVisible()) {
-                    if (shotX >= alienX && shotX <= (alienX + Commons.ALIEN_WIDTH) &&
+        for (Alien alien : aliens) {
+            int alienX = alien.getX();
+            int alienY = alien.getY();
+
+            if (alien.isVisible() && shot.isVisible()) {
+                if (shotX >= alienX && shotX <= (alienX + Commons.ALIEN_WIDTH) &&
                         shotY >= alienY && shotY <= (alienY + Commons.ALIEN_HEIGHT)) {
 
-                        var ii = new ImageIcon("src/images/explosion.png");
-                        alien.setImage(ii.getImage());
-                        alien.setDying(true);
-                        deaths++;
-                        shot.die();
-                    }
+                    var ii = new ImageIcon("src/images/explosion.png");
+                    alien.setImage(ii.getImage());
+                    alien.setDying(true);
+                    deaths++;
+                    shot.die();
                 }
-            }
-
-            int y = shot.getY() - 4;
-            if (y < 0) {
-                shot.die();
-            } else {
-                shot.setY(y);
             }
         }
 
+        int y = shot.getY() - 4;
+        if (y < 0) {
+            shot.die();
+        } else {
+            shot.setY(y);
+        }
+    }
+
+    private void updateAliens(List<Alien> aliens) {
         for (Alien alien : aliens) {
             int x = alien.getX();
 
             if (x >= Commons.BOARD_WIDTH - Commons.BORDER_RIGHT) {
-                for (Alien a : aliens) a.setY(a.getY() + Commons.GO_DOWN);
+                for (Alien a : aliens) {
+                    a.setY(a.getY() + Commons.GO_DOWN);
+                }
             }
 
             if (x <= Commons.BORDER_LEFT) {
-                for (Alien a : aliens) a.setY(a.getY() + Commons.GO_DOWN);
+                for (Alien a : aliens) {
+                    a.setY(a.getY() + Commons.GO_DOWN);
+                }
             }
         }
 
-        Iterator<Alien> it = aliens.iterator();
-        while (it.hasNext()) {
-            Alien alien = it.next();
+        for (Alien alien : aliens) {
             if (alien.isVisible()) {
                 int y = alien.getY();
                 if (y > Commons.GROUND - Commons.ALIEN_HEIGHT) {
                     inGame = false;
                     message = "Invasion!";
                 }
-                alien.act(1); // simplified
+                alien.act(1); // Use direction if needed
             }
         }
+    }
 
-        var generator = new Random();
+    private void updateBombs(Player player, List<Alien> aliens) {
+        Random generator = new Random();
+
         for (Alien alien : aliens) {
+            int chance = generator.nextInt(15);
             Alien.Bomb bomb = alien.getBomb();
-            int shotChance = generator.nextInt(15);
 
-            if (shotChance == Commons.CHANCE && alien.isVisible() && bomb.isDestroyed()) {
+            if (chance == Commons.CHANCE && alien.isVisible() && bomb.isDestroyed()) {
                 bomb.setDestroyed(false);
                 bomb.setX(alien.getX());
                 bomb.setY(alien.getY());
+            }
+
+            int bombX = bomb.getX();
+            int bombY = bomb.getY();
+            int playerX = player.getX();
+            int playerY = player.getY();
+
+            if (player.isVisible() && !bomb.isDestroyed()) {
+                if (bombX >= playerX &&
+                        bombX <= (playerX + Commons.PLAYER_WIDTH) &&
+                        bombY >= playerY &&
+                        bombY <= (playerY + Commons.PLAYER_HEIGHT)) {
+
+                    var ii = new ImageIcon("src/images/explosion.png");
+                    player.setImage(ii.getImage());
+                    player.setDying(true);
+                    bomb.setDestroyed(true);
+                }
             }
 
             if (!bomb.isDestroyed()) {
