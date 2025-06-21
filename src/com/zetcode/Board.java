@@ -154,9 +154,17 @@ public class Board extends JPanel {
 
         if (!gameEngine.isInGame()) {
             inGame = false;
-            message = gameEngine.getMessage();
+            message = gameEngine.getMessage(); // ✅ Pulls "Game won!" or "Invasion!" correctly
             timer.stop();
         }
+    }
+
+    private boolean isAtEdge(int x) {
+        return x <= GameConfig.Logic.BORDER_LEFT || x >= GameConfig.Board.WIDTH - GameConfig.Logic.BORDER_RIGHT;
+    }
+
+    private boolean isAlienShot(Alien alien, Shot shot) {
+        return alien.isVisible() && shot.isVisible();
     }
 
     private void doGameCycle() {
