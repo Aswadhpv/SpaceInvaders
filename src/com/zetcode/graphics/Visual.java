@@ -1,3 +1,4 @@
+// Replaces Sprite.java and encapsulates all visual state
 package com.zetcode.graphics;
 
 import javax.swing.ImageIcon;
