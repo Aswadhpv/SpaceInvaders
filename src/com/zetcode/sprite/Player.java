@@ -73,4 +73,7 @@ public class Player extends Sprite {
             dx = 0;
         }
     }
+    public void setDx(int dx) {
+        this.dx = dx;
+    }
 }
