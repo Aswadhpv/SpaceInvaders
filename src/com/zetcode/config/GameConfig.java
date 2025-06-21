@@ -35,3 +35,4 @@ public class GameConfig {
         public static final int NUMBER_OF_ALIENS_TO_DESTROY = 24;
     }
 }
+
