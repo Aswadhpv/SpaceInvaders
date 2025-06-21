@@ -371,4 +371,32 @@ public class Board extends JPanel {
             }
         }
     }
+
+    public boolean isInGame() {
+        return inGame;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public List<Alien> getAliens() {
+        return aliens;
+    }
+
+    public Shot getShot() {
+        return shot;
+    }
+
+    public void setDeaths(int d) {
+        this.deaths = d;
+    }
+
+    public void triggerUpdate() {
+        update();  // used for testing
+    }
 }
