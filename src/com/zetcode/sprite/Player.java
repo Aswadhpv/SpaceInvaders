@@ -1,9 +1,11 @@
 package com.zetcode.sprite;
 
 import com.zetcode.config.GameConfig;
+import com.zetcode.engine.Updatable;
+
 import javax.swing.ImageIcon;
 
-public class Player extends Sprite {
+public class Player extends Sprite implements Updatable {
 
     private int dx;
     private boolean dying;
@@ -15,7 +17,8 @@ public class Player extends Sprite {
         setY(GameConfig.Player.INIT_Y);
     }
 
-    public void act() {
+    @Override
+    public void update() {
         setX(getX() + dx);
     }
 

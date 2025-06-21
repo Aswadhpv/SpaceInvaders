@@ -1,107 +1,93 @@
 package com.zetcode.engine;
 
+import com.zetcode.config.GameConfig;
 import com.zetcode.sprite.Alien;
 import com.zetcode.sprite.Player;
 import com.zetcode.sprite.Shot;
-import com.zetcode.config.GameConfig;
 
 import javax.swing.ImageIcon;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 public class GameEngine {
 
+    private int direction = -1;
     private int deaths = 0;
     private boolean inGame = true;
     private String message = "Game Over";
+    private final String explosionImgPath = "src/images/explosion.png";
 
     public void update(Player player, Shot shot, List<Alien> aliens) {
-        checkWinCondition();
-        updatePlayer(player);
-        updateShot(shot, aliens);
-        updateAliens(aliens);
-        updateBombs(player, aliens);
-    }
+        if (!inGame) return;
 
-    private void checkWinCondition() {
-        if (deaths == GameConfig.Logic.NUMBER_OF_ALIENS_TO_DESTROY) {
+        // win condition
+        if (deaths >= GameConfig.Logic.NUMBER_OF_ALIENS_TO_DESTROY) {
             inGame = false;
             message = "Game won!";
+            return;
         }
-    }
 
-    private void updatePlayer(Player player) {
-        player.act();
-    }
+        player.update();
+        shot.update();
 
-    private void updateShot(Shot shot, List<Alien> aliens) {
-        if (!shot.isVisible()) return;
-
+        // collision with aliens
         for (Alien alien : aliens) {
             if (alien.handleShotCollision(shot)) {
                 deaths++;
             }
         }
 
-        int y = shot.getY() - 4;
-        if (y < 0) {
-            shot.die();
-        } else {
-            shot.setY(y);
-        }
+        updateAliens(aliens);
+        updateBombs(aliens, player);
     }
 
     private void updateAliens(List<Alien> aliens) {
+        boolean atRightEdge = false;
+        boolean atLeftEdge = false;
+
         for (Alien alien : aliens) {
             int x = alien.getX();
-
             if (x >= GameConfig.Board.WIDTH - GameConfig.Logic.BORDER_RIGHT) {
-                for (Alien a : aliens) {
-                    a.setY(a.getY() + GameConfig.Alien.GO_DOWN);
-                }
+                atRightEdge = true;
             }
-
             if (x <= GameConfig.Logic.BORDER_LEFT) {
-                for (Alien a : aliens) {
-                    a.setY(a.getY() + GameConfig.Alien.GO_DOWN);
-                }
+                atLeftEdge = true;
             }
         }
 
+        if (atRightEdge && direction != -1) {
+            direction = -1;
+            dropAllAliens(aliens);
+        }
+
+        if (atLeftEdge && direction != 1) {
+            direction = 1;
+            dropAllAliens(aliens);
+        }
+
         for (Alien alien : aliens) {
-            if (alien.isVisible()) {
-                int y = alien.getY();
-                if (y > GameConfig.Board.GROUND - alien.getHeight()) {
-                    inGame = false;
-                    message = "Invasion!";
-                }
-                alien.act(1); // assume right direction for now
+            if (!alien.isVisible()) continue;
+
+            if (alien.hasReachedGround()) {
+                inGame = false;
+                message = "Invasion!";
+                return;
             }
+
+            alien.update(direction);
         }
     }
 
-    private void updateBombs(Player player, List<Alien> aliens) {
-        Random generator = new Random();
-
+    private void dropAllAliens(List<Alien> aliens) {
         for (Alien alien : aliens) {
-            Alien.Bomb bomb = alien.getBomb();
+            alien.setY(alien.getY() + GameConfig.Logic.GO_DOWN);
+        }
+    }
 
-            if (generator.nextInt(15) == GameConfig.Alien.CHANCE &&
-                    alien.isVisible() && bomb.isDestroyed()) {
-
-                bomb.setDestroyed(false);
-                bomb.setX(alien.getX());
-                bomb.setY(alien.getY());
-            }
-
-            bomb.handlePlayerHit(player);
-
-            if (!bomb.isDestroyed()) {
-                bomb.setY(bomb.getY() + 1);
-                if (bomb.getY() >= GameConfig.Board.GROUND - GameConfig.Bomb.HEIGHT) {
-                    bomb.setDestroyed(true);
-                }
-            }
+    private void updateBombs(List<Alien> aliens, Player player) {
+        for (Alien alien : aliens) {
+            alien.maybeDropBomb();
+            alien.updateBomb(player);
         }
     }
 
@@ -115,9 +101,5 @@ public class GameEngine {
 
     public int getDeaths() {
         return deaths;
-    }
-
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
     }
 }

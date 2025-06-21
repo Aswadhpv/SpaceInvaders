@@ -20,7 +20,7 @@ public class Alien extends Sprite {
         explosionImage = new ImageIcon("src/images/explosion.png").getImage();
     }
 
-    public void act(int direction) {
+    public void update(int direction) {
         setX(getX() + direction);
     }
 

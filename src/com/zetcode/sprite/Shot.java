@@ -1,8 +1,8 @@
 package com.zetcode.sprite;
 
-import javax.swing.ImageIcon;
+import com.zetcode.engine.Updatable;
 
-public class Shot extends Sprite {
+public class Shot extends Sprite implements Updatable {
 
     public Shot() {
         setVisible(false);
@@ -14,6 +14,16 @@ public class Shot extends Sprite {
         int V_SPACE = 1;
         setX(x + H_SPACE);
         setY(y - V_SPACE);
+    }
+
+    @Override
+    public void update() {
+        int y = getY() - 4;
+        if (y < 0) {
+            die();
+        } else {
+            setY(y);
+        }
     }
 
     public void makeVisible() {
