@@ -70,6 +70,9 @@ public class Board extends JPanel {
         renderer.render(g, this, inGame, gameEngine.getMessage(), aliens, player, shot);
     }
 
+    /**
+     * Updates game state and checks for end condition.
+     */
     private void update() {
         gameEngine.update(player, shot, aliens);
 
