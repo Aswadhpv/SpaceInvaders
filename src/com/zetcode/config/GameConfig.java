@@ -16,16 +16,16 @@ public final class GameConfig {
     public static class Alien {
         public static final int WIDTH = 12;
         public static final int HEIGHT = 12;
-        public static final int POSITION_X = 150;
-        public static final int POSITION_Y = 5;
+        public static final int START_POS_X = 150;
+        public static final int START_POS_Y = 5;
         public static final int CHANCE = 5;
     }
 
     public static class Player {
         public static final int WIDTH = 15;
         public static final int HEIGHT = 10;
-        public static final int STATION_X = 270;
-        public static final int STATION_Y = 280;
+        public static final int START_POS_X = 270;  // renamed from STATION_X
+        public static final int START_POS_Y = 280;  // renamed from STATION_Y
     }
 
     public static class Bomb {
@@ -38,5 +38,8 @@ public final class GameConfig {
         public static final int BORDER_RIGHT = 5;
         public static final int GO_DOWN = 15;
         public static final int NUMBER_OF_ALIENS_TO_DESTROY = 24;
+
+        public static final int PLAYER_MIN_X = 0;
+        public static final int PLAYER_MAX_X = Board.WIDTH - Player.WIDTH;
     }
 }

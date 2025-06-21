@@ -13,13 +13,18 @@ public class Player extends Sprite implements Updatable {
 
     public Player() {
         loadImage("src/images/player.png");
-        setX(GameConfig.Player.STATION_X);
-        setY(GameConfig.Player.STATION_Y);
+        setX(GameConfig.Player.START_POS_X);
+        setY(GameConfig.Player.START_POS_Y);
     }
 
     @Override
     public void update() {
-        setX(getX() + dx);
+        int newX = getX() + dx;
+
+        // ✅ use config constants to avoid shotgun surgery
+        if (newX >= GameConfig.Logic.PLAYER_MIN_X && newX <= GameConfig.Logic.PLAYER_MAX_X) {
+            setX(newX);
+        }
     }
 
     public void explode() {
