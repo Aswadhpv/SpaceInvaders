@@ -1,68 +1,94 @@
 package com.zetcode.sprite;
 
+import com.zetcode.Commons;
+
 import javax.swing.ImageIcon;
+import java.awt.Image;
 
 public class Alien extends Sprite {
 
     private Bomb bomb;
+    private boolean dying;
 
     public Alien(int x, int y) {
-
-        initAlien(x, y);
-    }
-
-    private void initAlien(int x, int y) {
-
         this.x = x;
         this.y = y;
-
         bomb = new Bomb(x, y);
+        initAlien();
+    }
 
-        var alienImg = "src/images/alien.png";
-        var ii = new ImageIcon(alienImg);
-
+    private void initAlien() {
+        ImageIcon ii = new ImageIcon("src/images/alien.png");
         setImage(ii.getImage());
     }
 
     public void act(int direction) {
-
         this.x += direction;
     }
 
     public Bomb getBomb() {
-
         return bomb;
     }
 
-    public class Bomb extends Sprite {
+    public boolean isDying() {
+        return dying;
+    }
 
+    public void setDying(boolean dying) {
+        this.dying = dying;
+    }
+
+    public boolean intersects(Shot shot) {
+        int shotX = shot.getX();
+        int shotY = shot.getY();
+
+        return isVisible() && shot.isVisible() &&
+                shotX >= this.getX() &&
+                shotX <= (this.getX() + Commons.ALIEN_WIDTH) &&
+                shotY >= this.getY() &&
+                shotY <= (this.getY() + Commons.ALIEN_HEIGHT);
+    }
+
+    public class Bomb {
+        private int x;
+        private int y;
         private boolean destroyed;
+        private Image image;
 
         public Bomb(int x, int y) {
-
-            initBomb(x, y);
-        }
-
-        private void initBomb(int x, int y) {
-
-            setDestroyed(true);
-
             this.x = x;
             this.y = y;
-
-            var bombImg = "src/images/bomb.png";
-            var ii = new ImageIcon(bombImg);
-            setImage(ii.getImage());
+            destroyed = true;
+            ImageIcon ii = new ImageIcon("src/images/bomb.png");
+            image = ii.getImage();
         }
 
-        public void setDestroyed(boolean destroyed) {
-
-            this.destroyed = destroyed;
+        public Image getImage() {
+            return image;
         }
 
         public boolean isDestroyed() {
-
             return destroyed;
+        }
+
+        public void setDestroyed(boolean destroyed) {
+            this.destroyed = destroyed;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setY(int y) {
+            this.y = y;
         }
     }
 }

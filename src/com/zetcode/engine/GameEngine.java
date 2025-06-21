@@ -37,23 +37,13 @@ public class GameEngine {
     private void updateShot(Shot shot, List<Alien> aliens) {
         if (!shot.isVisible()) return;
 
-        int shotX = shot.getX();
-        int shotY = shot.getY();
-
         for (Alien alien : aliens) {
-            int alienX = alien.getX();
-            int alienY = alien.getY();
-
-            if (alien.isVisible() && shot.isVisible()) {
-                if (shotX >= alienX && shotX <= (alienX + Commons.ALIEN_WIDTH) &&
-                        shotY >= alienY && shotY <= (alienY + Commons.ALIEN_HEIGHT)) {
-
-                    var ii = new ImageIcon("src/images/explosion.png");
-                    alien.setImage(ii.getImage());
-                    alien.setDying(true);
-                    deaths++;
-                    shot.die();
-                }
+            if (alien.intersects(shot)) {
+                var ii = new ImageIcon("src/images/explosion.png");
+                alien.setImage(ii.getImage());
+                alien.setDying(true);
+                deaths++;
+                shot.die();
             }
         }
 
@@ -89,7 +79,7 @@ public class GameEngine {
                     inGame = false;
                     message = "Invasion!";
                 }
-                alien.act(1); // Use direction if needed
+                alien.act(1);
             }
         }
     }
