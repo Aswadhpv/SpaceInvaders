@@ -38,12 +38,8 @@ public class GameEngine {
         if (!shot.isVisible()) return;
 
         for (Alien alien : aliens) {
-            if (alien.intersects(shot)) {
-                var ii = new ImageIcon("src/images/explosion.png");
-                alien.setImage(ii.getImage());
-                alien.setDying(true);
+            if (alien.handleShotCollision(shot)) {
                 deaths++;
-                shot.die();
             }
         }
 
@@ -79,7 +75,7 @@ public class GameEngine {
                     inGame = false;
                     message = "Invasion!";
                 }
-                alien.act(1); // assuming 1 is the current direction
+                alien.act(1); // assume right direction for now
             }
         }
     }
@@ -88,32 +84,17 @@ public class GameEngine {
         Random generator = new Random();
 
         for (Alien alien : aliens) {
-            int chance = generator.nextInt(15);
             Alien.Bomb bomb = alien.getBomb();
 
-            if (chance == GameConfig.Alien.CHANCE && alien.isVisible() && bomb.isDestroyed()) {
+            if (generator.nextInt(15) == GameConfig.Alien.CHANCE &&
+                    alien.isVisible() && bomb.isDestroyed()) {
+
                 bomb.setDestroyed(false);
                 bomb.setX(alien.getX());
                 bomb.setY(alien.getY());
             }
 
-            int bombX = bomb.getX();
-            int bombY = bomb.getY();
-            int playerX = player.getX();
-            int playerY = player.getY();
-
-            if (player.isVisible() && !bomb.isDestroyed()) {
-                if (bombX >= playerX &&
-                        bombX <= (playerX + player.getWidth()) &&
-                        bombY >= playerY &&
-                        bombY <= (playerY + player.getHeight())) {
-
-                    var ii = new ImageIcon("src/images/explosion.png");
-                    player.setImage(ii.getImage());
-                    player.setDying(true);
-                    bomb.setDestroyed(true);
-                }
-            }
+            bomb.handlePlayerHit(player);
 
             if (!bomb.isDestroyed()) {
                 bomb.setY(bomb.getY() + 1);

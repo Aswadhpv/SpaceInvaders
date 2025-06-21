@@ -39,14 +39,25 @@ public class Alien extends Sprite {
         this.dying = dying;
     }
 
-    public boolean intersects(Shot shot) {
+    public boolean handleShotCollision(Shot shot) {
+        if (!isVisible() || !shot.isVisible()) return false;
+
         int shotX = shot.getX();
         int shotY = shot.getY();
-        return isVisible() && shot.isVisible() &&
-                shotX >= getX() &&
+
+        boolean hit = shotX >= getX() &&
                 shotX <= (getX() + getWidth()) &&
                 shotY >= getY() &&
                 shotY <= (getY() + getHeight());
+
+        if (hit) {
+            ImageIcon ii = new ImageIcon("src/images/explosion.png");
+            setImage(ii.getImage());
+            setDying(true);
+            shot.die();
+        }
+
+        return hit;
     }
 
     public class Bomb {
@@ -77,5 +88,28 @@ public class Alien extends Sprite {
         public int getY() { return y; }
         public void setX(int x) { this.x = x; }
         public void setY(int y) { this.y = y; }
+
+        public boolean handlePlayerHit(Player player) {
+            if (destroyed || !player.isVisible()) return false;
+
+            int bombX = getX();
+            int bombY = getY();
+            int playerX = player.getX();
+            int playerY = player.getY();
+
+            boolean hit = bombX >= playerX &&
+                    bombX <= (playerX + player.getWidth()) &&
+                    bombY >= playerY &&
+                    bombY <= (playerY + player.getHeight());
+
+            if (hit) {
+                ImageIcon ii = new ImageIcon("src/images/explosion.png");
+                player.setImage(ii.getImage());
+                player.setDying(true);
+                setDestroyed(true);
+            }
+
+            return hit;
+        }
     }
 }
