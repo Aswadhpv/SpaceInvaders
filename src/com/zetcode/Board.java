@@ -27,7 +27,6 @@ public class Board extends JPanel {
     private Shot shot;
 
     private boolean inGame = true;
-    private String message = "Game Over";
 
     private Timer timer;
     private GameEngine gameEngine;
@@ -145,7 +144,7 @@ public class Board extends JPanel {
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(message, (GameConfig.Board.WIDTH - fontMetrics.stringWidth(message)) / 2,
+        g.drawString(gameEngine.getMessage(), (GameConfig.Board.WIDTH - fontMetrics.stringWidth(gameEngine.getMessage())) / 2,
                 GameConfig.Board.WIDTH / 2);
     }
 
@@ -154,17 +153,8 @@ public class Board extends JPanel {
 
         if (!gameEngine.isInGame()) {
             inGame = false;
-            message = gameEngine.getMessage(); // ✅ Pulls "Game won!" or "Invasion!" correctly
             timer.stop();
         }
-    }
-
-    private boolean isAtEdge(int x) {
-        return x <= GameConfig.Logic.BORDER_LEFT || x >= GameConfig.Board.WIDTH - GameConfig.Logic.BORDER_RIGHT;
-    }
-
-    private boolean isAlienShot(Alien alien, Shot shot) {
-        return alien.isVisible() && shot.isVisible();
     }
 
     private void doGameCycle() {
