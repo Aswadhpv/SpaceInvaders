@@ -4,71 +4,71 @@ import java.awt.Image;
 
 public class Sprite {
 
-    private boolean visible;
+    protected EntityState state;
     private Image image;
     private boolean dying;
 
-    int x;
-    int y;
-    int dx;
-
     public Sprite() {
-
-        visible = true;
+        state = new EntityState();
     }
 
     public void die() {
-
-        visible = false;
+        state.setVisible(false);
     }
 
     public boolean isVisible() {
-
-        return visible;
+        return state.isVisible();
     }
 
-    protected void setVisible(boolean visible) {
-
-        this.visible = visible;
+    public void setVisible(boolean visible) {
+        state.setVisible(visible);
     }
 
     public void setImage(Image image) {
-
         this.image = image;
     }
 
     public Image getImage() {
-
         return image;
     }
 
     public void setX(int x) {
-
-        this.x = x;
+        state.setX(x);
     }
 
     public void setY(int y) {
-
-        this.y = y;
-    }
-
-    public int getY() {
-
-        return y;
+        state.setY(y);
     }
 
     public int getX() {
+        return state.getX();
+    }
 
-        return x;
+    public int getY() {
+        return state.getY();
+    }
+
+    public void setWidth(int width) {
+        state.setWidth(width);
+    }
+
+    public void setHeight(int height) {
+        state.setHeight(height);
+    }
+
+    public int getWidth() {
+        return state.getWidth();
+    }
+
+    public int getHeight() {
+        return state.getHeight();
     }
 
     public void setDying(boolean dying) {
-
         this.dying = dying;
     }
 
     public boolean isDying() {
-
         return this.dying;
     }
 }
