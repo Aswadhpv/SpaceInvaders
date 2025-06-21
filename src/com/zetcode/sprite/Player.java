@@ -13,8 +13,8 @@ public class Player extends Sprite implements Updatable {
 
     public Player() {
         loadImage("src/images/player.png");
-        setX(GameConfig.Player.INIT_X);
-        setY(GameConfig.Player.INIT_Y);
+        setX(GameConfig.Player.STATION_X);
+        setY(GameConfig.Player.STATION_Y);
     }
 
     @Override

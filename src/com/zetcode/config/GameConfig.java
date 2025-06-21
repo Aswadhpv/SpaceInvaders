@@ -16,16 +16,16 @@ public final class GameConfig {
     public static class Alien {
         public static final int WIDTH = 12;
         public static final int HEIGHT = 12;
-        public static final int INIT_X = 150;
-        public static final int INIT_Y = 5;
+        public static final int POSITION_X = 150;
+        public static final int POSITION_Y = 5;
         public static final int CHANCE = 5;
     }
 
     public static class Player {
         public static final int WIDTH = 15;
         public static final int HEIGHT = 10;
-        public static final int INIT_X = 270;
-        public static final int INIT_Y = 280;
+        public static final int STATION_X = 270;
+        public static final int STATION_Y = 280;
     }
 
     public static class Bomb {
