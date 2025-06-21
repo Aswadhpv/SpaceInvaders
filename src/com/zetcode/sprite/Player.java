@@ -2,39 +2,44 @@ package com.zetcode.sprite;
 
 import com.zetcode.config.GameConfig;
 import com.zetcode.engine.Updatable;
+import com.zetcode.graphics.Visual;
 
 import javax.swing.ImageIcon;
 
-public class Player extends Sprite implements Updatable {
+public class Player implements Updatable {
 
+    private final Visual visual;
     private int dx;
     private boolean dying;
     private final ImageIcon explosion = new ImageIcon("src/images/explosion.png");
 
     public Player() {
-        loadImage("src/images/player.png");
-        setX(GameConfig.Player.START_POS_X);
-        setY(GameConfig.Player.START_POS_Y);
+        visual = new Visual("src/images/player.png");
+        visual.setX(GameConfig.Player.START_POS_X);
+        visual.setY(GameConfig.Player.START_POS_Y);
     }
 
     @Override
     public void update() {
-        int newX = getX() + dx;
+        int newX = visual.getX() + dx;
 
-        // ✅ use config constants to avoid shotgun surgery
         if (newX >= GameConfig.Logic.PLAYER_MIN_X && newX <= GameConfig.Logic.PLAYER_MAX_X) {
-            setX(newX);
+            visual.setX(newX);
         }
     }
 
     public void explode() {
-        setSpriteImage(explosion.getImage());
+        visual.setImage(explosion.getImage());
         dying = true;
     }
 
-    public boolean isDying() {
-        return dying;
-    }
+    public boolean isDying() { return dying; }
+    public boolean isVisible() { return visual.isVisible(); }
+    public int getX() { return visual.getX(); }
+    public int getY() { return visual.getY(); }
+    public int getWidth() { return visual.getWidth(); }
+    public int getHeight() { return visual.getHeight(); }
+    public java.awt.Image getImage() { return visual.getImage(); }
 
     public void keyPressed(java.awt.event.KeyEvent e) {
         int key = e.getKeyCode();

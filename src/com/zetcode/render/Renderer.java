@@ -51,10 +51,6 @@ public class Renderer {
         if (player.isVisible()) {
             g.drawImage(player.getImage(), player.getX(), player.getY(), panel);
         }
-
-        if (player.isDying()) {
-            player.die();
-        }
     }
 
     private void drawShot(Graphics g, Shot shot, JPanel panel) {

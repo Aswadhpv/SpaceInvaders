@@ -1,59 +1,48 @@
 package com.zetcode.sprite;
 
 import com.zetcode.config.GameConfig;
+import com.zetcode.graphics.Visual;
 
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.util.Random;
 
-public class Alien extends Sprite {
+public class Alien {
 
+    private final Visual visual;
     private Bomb bomb;
-    private boolean dying;
-    private Image explosionImage;
+    private final Image explosionImage;
 
     public Alien(int x, int y) {
-        setX(x);
-        setY(y);
-        bomb = new Bomb(x, y);
-        loadImage("src/images/alien.png");
-        explosionImage = new ImageIcon("src/images/explosion.png").getImage();
+        this.visual = new Visual("src/images/alien.png");
+        this.visual.setX(x);
+        this.visual.setY(y);
+        this.bomb = new Bomb(x, y);
+        this.explosionImage = new ImageIcon("src/images/explosion.png").getImage();
     }
 
     public void update(int direction) {
-        setX(getX() + direction);
-    }
-
-    public boolean isDying() {
-        return dying;
-    }
-
-    public void setDying(boolean dying) {
-        this.dying = dying;
-    }
-
-    public Bomb getBomb() {
-        return bomb;
+        visual.setX(visual.getX() + direction);
     }
 
     public boolean hasReachedGround() {
-        return getY() > GameConfig.Board.GROUND - GameConfig.Alien.HEIGHT;
+        return visual.getY() > GameConfig.Board.GROUND - GameConfig.Alien.HEIGHT;
     }
 
     public boolean handleShotCollision(Shot shot) {
-        if (!isVisible() || !shot.isVisible()) return false;
+        if (!visual.isVisible() || !shot.isVisible()) return false;
 
         int shotX = shot.getX();
         int shotY = shot.getY();
 
-        boolean hit = shotX >= getX() &&
-                shotX <= (getX() + getWidth()) &&
-                shotY >= getY() &&
-                shotY <= (getY() + getHeight());
+        boolean hit = shotX >= visual.getX() &&
+                shotX <= (visual.getX() + visual.getWidth()) &&
+                shotY >= visual.getY() &&
+                shotY <= (visual.getY() + visual.getHeight());
 
         if (hit) {
-            setSpriteImage(explosionImage);
-            setDying(true);
+            visual.setImage(explosionImage);
+            visual.setDying(true);
             shot.die();
         }
 
@@ -61,13 +50,12 @@ public class Alien extends Sprite {
     }
 
     public void maybeDropBomb() {
-        if (!isVisible() || !bomb.isDestroyed()) return;
+        if (!visual.isVisible() || !bomb.isDestroyed()) return;
 
-        int chance = new Random().nextInt(15);
-        if (chance == GameConfig.Alien.CHANCE) {
+        if (new Random().nextInt(15) == GameConfig.Alien.CHANCE) {
             bomb.setDestroyed(false);
-            bomb.setX(getX());
-            bomb.setY(getY());
+            bomb.setX(visual.getX());
+            bomb.setY(visual.getY());
         }
     }
 
@@ -82,6 +70,16 @@ public class Alien extends Sprite {
         }
     }
 
+    public int getX() { return visual.getX(); }
+    public int getY() { return visual.getY(); }
+    public Image getImage() { return visual.getImage(); }
+    public boolean isVisible() { return visual.isVisible(); }
+    public boolean isDying() { return visual.isDying(); }
+    public void setY(int y) { visual.setY(y); }
+    public void die() { visual.die(); }
+
+    public Bomb getBomb() { return bomb; }
+
     public class Bomb {
         private int x, y;
         private boolean destroyed = true;
@@ -90,21 +88,12 @@ public class Alien extends Sprite {
         public Bomb(int x, int y) {
             this.x = x;
             this.y = y;
-            ImageIcon ii = new ImageIcon("src/images/bomb.png");
-            image = ii.getImage();
+            this.image = new ImageIcon("src/images/bomb.png").getImage();
         }
 
-        public Image getImage() {
-            return image;
-        }
-
-        public boolean isDestroyed() {
-            return destroyed;
-        }
-
-        public void setDestroyed(boolean destroyed) {
-            this.destroyed = destroyed;
-        }
+        public Image getImage() { return image; }
+        public boolean isDestroyed() { return destroyed; }
+        public void setDestroyed(boolean d) { destroyed = d; }
 
         public int getX() { return x; }
         public int getY() { return y; }
@@ -114,19 +103,14 @@ public class Alien extends Sprite {
         public boolean handlePlayerHit(Player player) {
             if (destroyed || !player.isVisible()) return false;
 
-            int bombX = getX();
-            int bombY = getY();
-            int playerX = player.getX();
-            int playerY = player.getY();
-
-            boolean hit = bombX >= playerX &&
-                    bombX <= (playerX + player.getWidth()) &&
-                    bombY >= playerY &&
-                    bombY <= (playerY + player.getHeight());
+            boolean hit = x >= player.getX() &&
+                    x <= (player.getX() + player.getWidth()) &&
+                    y >= player.getY() &&
+                    y <= (player.getY() + player.getHeight());
 
             if (hit) {
                 player.explode();
-                setDestroyed(true);
+                destroyed = true;
             }
 
             return hit;
