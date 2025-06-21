@@ -6,14 +6,12 @@ import com.zetcode.sprite.Player;
 import com.zetcode.sprite.Shot;
 import com.zetcode.engine.GameEngine;
 import com.zetcode.input.InputHandler;
+import com.zetcode.render.Renderer;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -31,6 +29,7 @@ public class Board extends JPanel {
     private Timer timer;
     private GameEngine gameEngine;
     private InputHandler inputHandler;
+    private Renderer renderer;
 
     public Board() {
         initBoard();
@@ -40,12 +39,13 @@ public class Board extends JPanel {
     private void initBoard() {
         setFocusable(true);
         d = new Dimension(GameConfig.Board.WIDTH, GameConfig.Board.HEIGHT);
-        setBackground(Color.black);
+        setBackground(java.awt.Color.black);
 
         gameEngine = new GameEngine();
         player = new Player();
         shot = new Shot();
         inputHandler = new InputHandler(player, shot, inGame);
+        renderer = new Renderer();
         addKeyListener(inputHandler);
 
         timer = new Timer(GameConfig.Board.DELAY, new GameCycle());
@@ -64,88 +64,10 @@ public class Board extends JPanel {
         }
     }
 
-    private void drawAliens(Graphics g) {
-        for (Alien alien : aliens) {
-            if (alien.isVisible()) {
-                g.drawImage(alien.getImage(), alien.getX(), alien.getY(), this);
-            }
-
-            if (alien.isDying()) {
-                alien.die();
-            }
-        }
-    }
-
-    private void drawPlayer(Graphics g) {
-        if (player.isVisible()) {
-            g.drawImage(player.getImage(), player.getX(), player.getY(), this);
-        }
-
-        if (player.isDying()) {
-            player.die();
-            inGame = false;
-        }
-    }
-
-    private void drawShot(Graphics g) {
-        if (shot.isVisible()) {
-            g.drawImage(shot.getImage(), shot.getX(), shot.getY(), this);
-        }
-    }
-
-    private void drawBombing(Graphics g) {
-        for (Alien a : aliens) {
-            Alien.Bomb b = a.getBomb();
-            if (!b.isDestroyed()) {
-                g.drawImage(b.getImage(), b.getX(), b.getY(), this);
-            }
-        }
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        doDrawing(g);
-    }
-
-    private void doDrawing(Graphics g) {
-        g.setColor(Color.black);
-        g.fillRect(0, 0, d.width, d.height);
-        g.setColor(Color.green);
-
-        if (inGame) {
-            g.drawLine(0, GameConfig.Board.GROUND,
-                    GameConfig.Board.WIDTH, GameConfig.Board.GROUND);
-            drawAliens(g);
-            drawPlayer(g);
-            drawShot(g);
-            drawBombing(g);
-        } else {
-            if (timer.isRunning()) {
-                timer.stop();
-            }
-            gameOver(g);
-        }
-
-        Toolkit.getDefaultToolkit().sync();
-    }
-
-    private void gameOver(Graphics g) {
-        g.setColor(Color.black);
-        g.fillRect(0, 0, GameConfig.Board.WIDTH, GameConfig.Board.HEIGHT);
-
-        g.setColor(new Color(0, 32, 48));
-        g.fillRect(50, GameConfig.Board.WIDTH / 2 - 30, GameConfig.Board.WIDTH - 100, 50);
-        g.setColor(Color.white);
-        g.drawRect(50, GameConfig.Board.WIDTH / 2 - 30, GameConfig.Board.WIDTH - 100, 50);
-
-        var small = new Font("Helvetica", Font.BOLD, 14);
-        var fontMetrics = this.getFontMetrics(small);
-
-        g.setColor(Color.white);
-        g.setFont(small);
-        g.drawString(gameEngine.getMessage(), (GameConfig.Board.WIDTH - fontMetrics.stringWidth(gameEngine.getMessage())) / 2,
-                GameConfig.Board.WIDTH / 2);
+        renderer.render(g, this, inGame, gameEngine.getMessage(), aliens, player, shot);
     }
 
     private void update() {
