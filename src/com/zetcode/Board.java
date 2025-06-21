@@ -399,4 +399,7 @@ public class Board extends JPanel {
     public void triggerUpdate() {
         update();  // used for testing
     }
+    public int getDeaths() {
+        return deaths;
+    }
 }
