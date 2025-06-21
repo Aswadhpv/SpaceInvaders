@@ -13,14 +13,8 @@ public class Alien extends Sprite {
         setX(x);
         setY(y);
         bomb = new Bomb(x, y);
-        initAlien();
-    }
-
-    private void initAlien() {
-        ImageIcon ii = new ImageIcon("src/images/alien.png");
-        setImage(ii.getImage());
-        setWidth(GameConfig.Alien.WIDTH);
-        setHeight(GameConfig.Alien.HEIGHT);
+        loadImage("src/images/alien.png");
+        setImageSize(GameConfig.Alien.WIDTH, GameConfig.Alien.HEIGHT);
     }
 
     public void act(int direction) {

@@ -1,7 +1,6 @@
 package com.zetcode.sprite;
 
 import com.zetcode.config.GameConfig;
-import javax.swing.ImageIcon;
 import java.awt.event.KeyEvent;
 
 public class Player extends Sprite {
@@ -9,17 +8,10 @@ public class Player extends Sprite {
     private int dx;
 
     public Player() {
-        initPlayer();
-    }
-
-    private void initPlayer() {
-        ImageIcon ii = new ImageIcon("src/images/player.png");
-        setImage(ii.getImage());
-
+        loadImage("src/images/player.png");
+        setImageSize(GameConfig.Player.WIDTH, GameConfig.Player.HEIGHT);
         setX(GameConfig.Player.INIT_X);
         setY(GameConfig.Player.INIT_Y);
-        setWidth(GameConfig.Player.WIDTH);
-        setHeight(GameConfig.Player.HEIGHT);
     }
 
     public void act() {

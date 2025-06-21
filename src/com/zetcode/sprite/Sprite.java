@@ -1,6 +1,7 @@
 package com.zetcode.sprite;
 
 import java.awt.Image;
+import javax.swing.ImageIcon;
 
 public class Sprite {
 
@@ -10,6 +11,16 @@ public class Sprite {
 
     public Sprite() {
         state = new EntityState();
+    }
+
+    protected void loadImage(String path) {
+        ImageIcon ii = new ImageIcon(path);
+        this.image = ii.getImage();
+    }
+
+    protected void setImageSize(int width, int height) {
+        setWidth(width);
+        setHeight(height);
     }
 
     public void die() {

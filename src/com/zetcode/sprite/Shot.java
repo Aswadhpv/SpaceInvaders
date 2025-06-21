@@ -1,7 +1,5 @@
 package com.zetcode.sprite;
 
-import javax.swing.ImageIcon;
-
 public class Shot extends Sprite {
 
     public Shot() {
@@ -9,16 +7,10 @@ public class Shot extends Sprite {
     }
 
     public Shot(int x, int y) {
-        initShot(x, y);
-    }
-
-    private void initShot(int x, int y) {
-        ImageIcon ii = new ImageIcon("src/images/shot.png");
-        setImage(ii.getImage());
-
+        loadImage("src/images/shot.png");
+        setImageSize(4, 10); // update if you define shot dimensions in GameConfig
         int H_SPACE = 6;
         int V_SPACE = 1;
-
         setX(x + H_SPACE);
         setY(y - V_SPACE);
     }
