@@ -8,13 +8,14 @@ public class Alien extends Sprite {
 
     private Bomb bomb;
     private boolean dying;
+    private Image explosionImage;
 
     public Alien(int x, int y) {
         setX(x);
         setY(y);
         bomb = new Bomb(x, y);
         loadImage("src/images/alien.png");
-        setImageSize(GameConfig.Alien.WIDTH, GameConfig.Alien.HEIGHT);
+        explosionImage = new ImageIcon("src/images/explosion.png").getImage();
     }
 
     public void act(int direction) {
@@ -45,8 +46,7 @@ public class Alien extends Sprite {
                 shotY <= (getY() + getHeight());
 
         if (hit) {
-            ImageIcon ii = new ImageIcon("src/images/explosion.png");
-            setImage(ii.getImage());
+            setSpriteImage(explosionImage);
             setDying(true);
             shot.die();
         }
@@ -97,9 +97,7 @@ public class Alien extends Sprite {
                     bombY <= (playerY + player.getHeight());
 
             if (hit) {
-                ImageIcon ii = new ImageIcon("src/images/explosion.png");
-                player.setImage(ii.getImage());
-                player.setDying(true);
+                player.explode();
                 setDestroyed(true);
             }
 

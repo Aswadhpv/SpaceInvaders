@@ -1,15 +1,16 @@
 package com.zetcode.sprite;
 
 import com.zetcode.config.GameConfig;
-import java.awt.event.KeyEvent;
+import javax.swing.ImageIcon;
 
 public class Player extends Sprite {
 
     private int dx;
+    private boolean dying;
+    private final ImageIcon explosion = new ImageIcon("src/images/explosion.png");
 
     public Player() {
         loadImage("src/images/player.png");
-        setImageSize(GameConfig.Player.WIDTH, GameConfig.Player.HEIGHT);
         setX(GameConfig.Player.INIT_X);
         setY(GameConfig.Player.INIT_Y);
     }
@@ -18,18 +19,27 @@ public class Player extends Sprite {
         setX(getX() + dx);
     }
 
-    public void keyPressed(KeyEvent e) {
+    public void explode() {
+        setSpriteImage(explosion.getImage());
+        dying = true;
+    }
+
+    public boolean isDying() {
+        return dying;
+    }
+
+    public void keyPressed(java.awt.event.KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_LEFT) {
+        if (key == java.awt.event.KeyEvent.VK_LEFT) {
             dx = -2;
-        } else if (key == KeyEvent.VK_RIGHT) {
+        } else if (key == java.awt.event.KeyEvent.VK_RIGHT) {
             dx = 2;
         }
     }
 
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(java.awt.event.KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) {
+        if (key == java.awt.event.KeyEvent.VK_LEFT || key == java.awt.event.KeyEvent.VK_RIGHT) {
             dx = 0;
         }
     }

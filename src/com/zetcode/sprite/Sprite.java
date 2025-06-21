@@ -7,7 +7,6 @@ public class Sprite {
 
     protected EntityState state;
     private Image image;
-    private boolean dying;
 
     public Sprite() {
         state = new EntityState();
@@ -18,9 +17,12 @@ public class Sprite {
         this.image = ii.getImage();
     }
 
-    protected void setImageSize(int width, int height) {
-        setWidth(width);
-        setHeight(height);
+    protected void setSpriteImage(Image image) {
+        this.image = image;
+    }
+
+    public Image getImage() {
+        return image;
     }
 
     public void die() {
@@ -35,36 +37,20 @@ public class Sprite {
         state.setVisible(visible);
     }
 
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public Image getImage() {
-        return image;
+    public int getX() {
+        return state.getX();
     }
 
     public void setX(int x) {
         state.setX(x);
     }
 
-    public void setY(int y) {
-        state.setY(y);
-    }
-
-    public int getX() {
-        return state.getX();
-    }
-
     public int getY() {
         return state.getY();
     }
 
-    public void setWidth(int width) {
-        state.setWidth(width);
-    }
-
-    public void setHeight(int height) {
-        state.setHeight(height);
+    public void setY(int y) {
+        state.setY(y);
     }
 
     public int getWidth() {
@@ -73,13 +59,5 @@ public class Sprite {
 
     public int getHeight() {
         return state.getHeight();
-    }
-
-    public void setDying(boolean dying) {
-        this.dying = dying;
-    }
-
-    public boolean isDying() {
-        return this.dying;
     }
 }
