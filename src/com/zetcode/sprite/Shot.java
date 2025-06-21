@@ -5,15 +5,14 @@ import javax.swing.ImageIcon;
 public class Shot extends Sprite {
 
     public Shot() {
+        setVisible(false); // invisible by default until fired
     }
 
     public Shot(int x, int y) {
-
         initShot(x, y);
     }
 
     private void initShot(int x, int y) {
-
         var shotImg = "src/images/shot.png";
         var ii = new ImageIcon(shotImg);
         setImage(ii.getImage());
@@ -23,5 +22,9 @@ public class Shot extends Sprite {
 
         int V_SPACE = 1;
         setY(y - V_SPACE);
+    }
+
+    public void makeVisible() {
+        setVisible(true);
     }
 }

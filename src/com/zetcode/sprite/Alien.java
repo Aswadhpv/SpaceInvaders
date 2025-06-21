@@ -11,8 +11,8 @@ public class Alien extends Sprite {
     private boolean dying;
 
     public Alien(int x, int y) {
-        this.x = x;
-        this.y = y;
+        setX(x);
+        setY(y);
         bomb = new Bomb(x, y);
         initAlien();
     }
@@ -23,7 +23,7 @@ public class Alien extends Sprite {
     }
 
     public void act(int direction) {
-        this.x += direction;
+        setX(getX() + direction);
     }
 
     public Bomb getBomb() {
@@ -43,10 +43,10 @@ public class Alien extends Sprite {
         int shotY = shot.getY();
 
         return isVisible() && shot.isVisible() &&
-                shotX >= this.getX() &&
-                shotX <= (this.getX() + Commons.ALIEN_WIDTH) &&
-                shotY >= this.getY() &&
-                shotY <= (this.getY() + Commons.ALIEN_HEIGHT);
+                shotX >= getX() &&
+                shotX <= (getX() + Commons.ALIEN_WIDTH) &&
+                shotY >= getY() &&
+                shotY <= (getY() + Commons.ALIEN_HEIGHT);
     }
 
     public class Bomb {
@@ -59,6 +59,7 @@ public class Alien extends Sprite {
             this.x = x;
             this.y = y;
             destroyed = true;
+
             ImageIcon ii = new ImageIcon("src/images/bomb.png");
             image = ii.getImage();
         }
