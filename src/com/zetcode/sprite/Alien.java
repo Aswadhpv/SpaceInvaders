@@ -1,7 +1,6 @@
 package com.zetcode.sprite;
 
-import com.zetcode.Commons;
-
+import com.zetcode.config.GameConfig;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 
@@ -20,6 +19,8 @@ public class Alien extends Sprite {
     private void initAlien() {
         ImageIcon ii = new ImageIcon("src/images/alien.png");
         setImage(ii.getImage());
+        setWidth(GameConfig.Alien.WIDTH);
+        setHeight(GameConfig.Alien.HEIGHT);
     }
 
     public void act(int direction) {
@@ -41,25 +42,21 @@ public class Alien extends Sprite {
     public boolean intersects(Shot shot) {
         int shotX = shot.getX();
         int shotY = shot.getY();
-
         return isVisible() && shot.isVisible() &&
                 shotX >= getX() &&
-                shotX <= (getX() + Commons.ALIEN_WIDTH) &&
+                shotX <= (getX() + getWidth()) &&
                 shotY >= getY() &&
-                shotY <= (getY() + Commons.ALIEN_HEIGHT);
+                shotY <= (getY() + getHeight());
     }
 
     public class Bomb {
-        private int x;
-        private int y;
-        private boolean destroyed;
-        private Image image;
+        private int x, y;
+        private boolean destroyed = true;
+        private final Image image;
 
         public Bomb(int x, int y) {
             this.x = x;
             this.y = y;
-            destroyed = true;
-
             ImageIcon ii = new ImageIcon("src/images/bomb.png");
             image = ii.getImage();
         }
@@ -76,20 +73,9 @@ public class Alien extends Sprite {
             this.destroyed = destroyed;
         }
 
-        public int getX() {
-            return x;
-        }
-
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public void setY(int y) {
-            this.y = y;
-        }
+        public int getX() { return x; }
+        public int getY() { return y; }
+        public void setX(int x) { this.x = x; }
+        public void setY(int y) { this.y = y; }
     }
 }

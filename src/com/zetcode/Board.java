@@ -1,5 +1,6 @@
 package com.zetcode;
 
+import com.zetcode.config.GameConfig;
 import com.zetcode.sprite.Alien;
 import com.zetcode.sprite.Player;
 import com.zetcode.sprite.Shot;
@@ -39,7 +40,7 @@ public class Board extends JPanel {
 
     private void initBoard() {
         setFocusable(true);
-        d = new Dimension(Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
+        d = new Dimension(GameConfig.Board.WIDTH, GameConfig.Board.HEIGHT);
         setBackground(Color.black);
 
         gameEngine = new GameEngine();
@@ -48,7 +49,7 @@ public class Board extends JPanel {
         inputHandler = new InputHandler(player, shot, inGame);
         addKeyListener(inputHandler);
 
-        timer = new Timer(Commons.DELAY, new GameCycle());
+        timer = new Timer(GameConfig.Board.DELAY, new GameCycle());
         timer.start();
     }
 
@@ -57,8 +58,8 @@ public class Board extends JPanel {
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 6; j++) {
-                var alien = new Alien(Commons.ALIEN_INIT_X + 18 * j,
-                        Commons.ALIEN_INIT_Y + 18 * i);
+                var alien = new Alien(GameConfig.Alien.INIT_X + 18 * j,
+                        GameConfig.Alien.INIT_Y + 18 * i);
                 aliens.add(alien);
             }
         }
@@ -114,8 +115,8 @@ public class Board extends JPanel {
         g.setColor(Color.green);
 
         if (inGame) {
-            g.drawLine(0, Commons.GROUND,
-                    Commons.BOARD_WIDTH, Commons.GROUND);
+            g.drawLine(0, GameConfig.Board.GROUND,
+                    GameConfig.Board.WIDTH, GameConfig.Board.GROUND);
             drawAliens(g);
             drawPlayer(g);
             drawShot(g);
@@ -132,20 +133,20 @@ public class Board extends JPanel {
 
     private void gameOver(Graphics g) {
         g.setColor(Color.black);
-        g.fillRect(0, 0, Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
+        g.fillRect(0, 0, GameConfig.Board.WIDTH, GameConfig.Board.HEIGHT);
 
         g.setColor(new Color(0, 32, 48));
-        g.fillRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
+        g.fillRect(50, GameConfig.Board.WIDTH / 2 - 30, GameConfig.Board.WIDTH - 100, 50);
         g.setColor(Color.white);
-        g.drawRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
+        g.drawRect(50, GameConfig.Board.WIDTH / 2 - 30, GameConfig.Board.WIDTH - 100, 50);
 
         var small = new Font("Helvetica", Font.BOLD, 14);
         var fontMetrics = this.getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(message, (Commons.BOARD_WIDTH - fontMetrics.stringWidth(message)) / 2,
-                Commons.BOARD_WIDTH / 2);
+        g.drawString(message, (GameConfig.Board.WIDTH - fontMetrics.stringWidth(message)) / 2,
+                GameConfig.Board.WIDTH / 2);
     }
 
     private void update() {

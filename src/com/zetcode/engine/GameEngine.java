@@ -3,7 +3,7 @@ package com.zetcode.engine;
 import com.zetcode.sprite.Alien;
 import com.zetcode.sprite.Player;
 import com.zetcode.sprite.Shot;
-import com.zetcode.Commons;
+import com.zetcode.config.GameConfig;
 
 import javax.swing.ImageIcon;
 import java.util.List;
@@ -24,7 +24,7 @@ public class GameEngine {
     }
 
     private void checkWinCondition() {
-        if (deaths == Commons.NUMBER_OF_ALIENS_TO_DESTROY) {
+        if (deaths == GameConfig.Logic.NUMBER_OF_ALIENS_TO_DESTROY) {
             inGame = false;
             message = "Game won!";
         }
@@ -59,15 +59,15 @@ public class GameEngine {
         for (Alien alien : aliens) {
             int x = alien.getX();
 
-            if (x >= Commons.BOARD_WIDTH - Commons.BORDER_RIGHT) {
+            if (x >= GameConfig.Board.WIDTH - GameConfig.Logic.BORDER_RIGHT) {
                 for (Alien a : aliens) {
-                    a.setY(a.getY() + Commons.GO_DOWN);
+                    a.setY(a.getY() + GameConfig.Alien.GO_DOWN);
                 }
             }
 
-            if (x <= Commons.BORDER_LEFT) {
+            if (x <= GameConfig.Logic.BORDER_LEFT) {
                 for (Alien a : aliens) {
-                    a.setY(a.getY() + Commons.GO_DOWN);
+                    a.setY(a.getY() + GameConfig.Alien.GO_DOWN);
                 }
             }
         }
@@ -75,11 +75,11 @@ public class GameEngine {
         for (Alien alien : aliens) {
             if (alien.isVisible()) {
                 int y = alien.getY();
-                if (y > Commons.GROUND - Commons.ALIEN_HEIGHT) {
+                if (y > GameConfig.Board.GROUND - alien.getHeight()) {
                     inGame = false;
                     message = "Invasion!";
                 }
-                alien.act(1);
+                alien.act(1); // assuming 1 is the current direction
             }
         }
     }
@@ -91,7 +91,7 @@ public class GameEngine {
             int chance = generator.nextInt(15);
             Alien.Bomb bomb = alien.getBomb();
 
-            if (chance == Commons.CHANCE && alien.isVisible() && bomb.isDestroyed()) {
+            if (chance == GameConfig.Alien.CHANCE && alien.isVisible() && bomb.isDestroyed()) {
                 bomb.setDestroyed(false);
                 bomb.setX(alien.getX());
                 bomb.setY(alien.getY());
@@ -104,9 +104,9 @@ public class GameEngine {
 
             if (player.isVisible() && !bomb.isDestroyed()) {
                 if (bombX >= playerX &&
-                        bombX <= (playerX + Commons.PLAYER_WIDTH) &&
+                        bombX <= (playerX + player.getWidth()) &&
                         bombY >= playerY &&
-                        bombY <= (playerY + Commons.PLAYER_HEIGHT)) {
+                        bombY <= (playerY + player.getHeight())) {
 
                     var ii = new ImageIcon("src/images/explosion.png");
                     player.setImage(ii.getImage());
@@ -117,7 +117,7 @@ public class GameEngine {
 
             if (!bomb.isDestroyed()) {
                 bomb.setY(bomb.getY() + 1);
-                if (bomb.getY() >= Commons.GROUND - Commons.BOMB_HEIGHT) {
+                if (bomb.getY() >= GameConfig.Board.GROUND - GameConfig.Bomb.HEIGHT) {
                     bomb.setDestroyed(true);
                 }
             }
